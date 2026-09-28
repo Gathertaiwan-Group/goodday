@@ -1,5 +1,7 @@
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
+import { DB_SCHEMA } from "./schema";
+
 // Service role client(繞過 RLS)— 只能在 server 使用
 // env 未設定時回傳 null,讓呼叫端優雅降級(本地無 DB 也能跑)
 export function tryCreateAdminClient() {
@@ -17,6 +19,7 @@ export function createAdminClient() {
     throw new Error("SUPABASE_SERVICE_ROLE_KEY / NEXT_PUBLIC_SUPABASE_URL 未設定");
   }
   return createSupabaseClient(url, key, {
+    db: { schema: DB_SCHEMA },
     auth: { persistSession: false, autoRefreshToken: false },
   });
 }

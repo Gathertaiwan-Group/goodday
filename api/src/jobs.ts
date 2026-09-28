@@ -5,13 +5,17 @@
 // 特別注意「4. 點數到期」這支:漏跑是會計問題,所以底下所有 Supabase 呼叫都不再
 // 靜默丟掉 error —— 舊版把 error 解構掉不看,查詢失敗會長得跟「沒資料要處理」一樣。
 import { createClient } from "@supabase/supabase-js";
+
+/** 合併後好日子的表住在 gooddays schema（與 web/src/lib/supabase/schema.ts 同值）。
+ *  api 與 web 沒有共用 package，所以各寫一份——兩邊都改到才算改完。 */
+const DB_SCHEMA = "gooddays";
 import * as Sentry from "@sentry/node";
 
 function db() {
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !key) return null;
-  return createClient(url, key, { auth: { persistSession: false } });
+  return createClient(url, key, { db: { schema: DB_SCHEMA }, auth: { persistSession: false } });
 }
 
 /** 直接沿用 db() 推導出來的 client 型別,避免 createClient 預設泛型對不上。 */

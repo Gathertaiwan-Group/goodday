@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import type { Locale } from "@/lib/i18n/config";
+import { DB_SCHEMA } from "@/lib/supabase/schema";
 
 // Supabase session 自動刷新;/account 與 /admin 需登入。
 // /en 前綴:rewrite 到去掉前綴的 basePath 並注入 x-locale request header,
@@ -41,6 +42,9 @@ export async function middleware(request: NextRequest) {
   if (!url || !anonKey) return finalize();
 
   const supabase = createServerClient(url, anonKey, {
+    // 目前這裡只做 session 刷新，schema 用不到；先帶上是為了以後有人在 middleware 讀表時，
+    // 不會靜默讀到小時光的同名表。
+    db: { schema: DB_SCHEMA },
     cookies: {
       getAll() {
         return request.cookies.getAll();
