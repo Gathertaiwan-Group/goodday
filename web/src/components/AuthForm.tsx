@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useTranslations } from "@/lib/i18n/context";
 import { localeHref } from "@/lib/i18n/href";
 import type { Messages } from "@/lib/i18n/messages";
+import { emailRedirectTo } from "@/lib/auth/confirm-link";
 
 export default function AuthForm() {
   const router = useRouter();
@@ -20,7 +21,10 @@ export default function AuthForm() {
   const [form, setForm] = useState({ email: "", password: "", name: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [info, setInfo] = useState("");
+  // /auth/confirm 驗證失敗會導回 /login?link=expired
+  const [info, setInfo] = useState(
+    searchParams.get("link") === "expired" ? messages.auth.linkExpired : "",
+  );
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -38,7 +42,9 @@ export default function AuthForm() {
         const { data, error } = await supabase.auth.signUp({
           email: form.email,
           password: form.password,
-          options: { data: { name: form.name } },
+          // 驗證信的連結＝這個網址＋?token_hash=…（三站共用一組信件模板，見 lib/auth/confirm-link.ts）。
+          // 不帶的話 Supabase 會退回 site_url（小時光的網域），客人點信會跑到別的網站。
+          options: { data: { name: form.name }, emailRedirectTo: emailRedirectTo(window.location.origin) },
         });
         if (error) throw new Error(mapAuthError(error.message, messages));
         if (data.session) {

@@ -563,6 +563,7 @@ const en: Messages = {
     submitRegister: "Create Account",
     submitting: "Processing…",
     registerSuccess: "Registration successful! Please check your email and click the confirmation link before logging in.",
+    linkExpired: "This confirmation link has expired or was already used. If you just clicked it, simply sign in; otherwise register again and we will send a new link.",
     errors: {
       passwordTooShort: "Password must be at least 8 characters",
       invalidCredentials: "Incorrect email or password",

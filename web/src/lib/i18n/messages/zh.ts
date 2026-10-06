@@ -542,6 +542,7 @@ const zh = {
     submitRegister: "建立帳號",
     submitting: "處理中…",
     registerSuccess: "註冊成功!請到信箱點擊確認連結後再登入。",
+    linkExpired: "確認連結已失效或已經用過了。如果你剛剛已經點過一次，直接登入就好；登入不了的話請重新註冊一次，我們會再寄一封新的確認信。",
     errors: {
       passwordTooShort: "密碼至少 8 碼",
       invalidCredentials: "帳號或密碼錯誤",
