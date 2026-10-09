@@ -20,7 +20,7 @@ console.error(`
 
 要改資料庫結構：在專案 noijrmhdfbfvjyvchvzj 上手動對 gooddays schema 執行 SQL
 （web／api 的 Supabase client 都已指定 gooddays schema，見 web/src/lib/supabase/schema.ts）。
-合併與切換的紀錄：alice-store/supabase/consolidation/95_cutover.md（小時光書店 repo LaiQuan-tech/interval-books）。
+合併與切換的紀錄：alice-store/supabase/consolidation/95_cutover.md（小時光書店 repo Gathertaiwan-Group/interval-books）。
 `);
 process.exit(1);
 
@@ -65,7 +65,7 @@ const ENV = {
   ADMIN_EMAIL: process.env.ADMIN_EMAIL ?? "",
   ADMIN_PASSWORD: process.env.ADMIN_PASSWORD ?? "",
   SUPABASE_ORG_ID: process.env.SUPABASE_ORG_ID ?? "",
-  GITHUB_REPO: process.env.GITHUB_REPO ?? "LaiQuan-tech/goodday",
+  GITHUB_REPO: process.env.GITHUB_REPO ?? "Gathertaiwan-Group/goodday",
   PROJECT_NAME: process.env.PROJECT_NAME ?? "goodday",
   SUPABASE_REGION: process.env.SUPABASE_REGION ?? "ap-northeast-1",
 };

@@ -30,7 +30,7 @@
 - **為什麼停用**:腳本是合併前寫的,現在執行會新建空專案並改 Vercel 環境變數、重新部署正式站,就算指向合併後的專案也會把 migration 重跑進小時光書店的 `public`、改三站共用的 auth 設定與小時光書店的 `profiles`;詳見 `scripts/provision.mjs` 開頭
 - **改資料庫結構**:在專案 `noijrmhdfbfvjyvchvzj` 上手動對 `gooddays` schema 執行 SQL(web / api 的 Supabase client 都已指定 `gooddays`,見 `web/src/lib/supabase/schema.ts`);`supabase/migrations/` 是合併前寫給 `public` 的歷史檔,不要整批對合併後的專案重跑(含 `supabase db push`),否則會套進小時光書店的 `public`
 - **部署**:push 到 `main` → 自動部署 Vercel 專案 `goodday`(網站)與 Railway 專案 `interval` 的 `api` 服務;GitHub Actions 另外會跑 lint / typecheck / test / build(見 `.github/workflows/ci.yml`)
-- **合併與切換紀錄**:`alice-store/supabase/consolidation/95_cutover.md`(小時光書店 repo `LaiQuan-tech/interval-books`)
+- **合併與切換紀錄**:`alice-store/supabase/consolidation/95_cutover.md`(小時光書店 repo `Gathertaiwan-Group/interval-books`)
 
 ## 本地開發
 
