@@ -22,32 +22,15 @@
 
 機制參考:[gather-landing](https://github.com/Gathertaiwan-Group/gather-landing) 的 AI 報價流程(AI 絕不自行報價,人審後寄出)、[realreal](https://github.com/realreal919/realreal) 的會員點數帳本/RLS/後台架構。
 
-## 快速開始(一鍵佈建)
+## 一鍵佈建已停用(請勿執行)
 
-```bash
-npm install
+`scripts/provision.mjs`(`npm run provision`)**已停用**,執行只會印出原因並結束,什麼都不會做;檔內 guard 之後的程式碼僅留作紀錄,請勿移除 guard 硬跑。
 
-SUPABASE_ACCESS_TOKEN=sbp_xxx \
-VERCEL_TOKEN=xxx \
-RAILWAY_TOKEN=xxx \
-RESEND_API_KEY=re_xxx \
-GEMINI_API_KEY=xxx \
-ADMIN_EMAIL=you@example.com ADMIN_PASSWORD=一組安全密碼 \
-node scripts/provision.mjs
-```
-
-腳本會自動(**冪等,可重複執行**):
-
-1. 建立 Supabase 專案 → 套用 `supabase/migrations`(含小時光種子資料)→ 開啟註冊自動確認 → 建立管理員帳號
-2. 建立 Vercel 專案並**綁定本 GitHub repo**(push `main` 即自動部署)→ 寫入環境變數 → 觸發首次部署
-3. 建立 Railway 專案 + `api` 服務(綁定 repo,依 `railway.toml` 建置)→ 寫入環境變數 → 產生網域
-
-前置需求(各做一次):
-- Vercel 帳號已安裝 [GitHub App](https://vercel.com/account/git) 並授權本 repo
-- Railway 帳號已[連結 GitHub](https://railway.app/account) 並授權本 repo
-- Resend 正式寄信需[驗證網域](https://resend.com/domains)
-
-完成後:**push 到 `main` → Vercel(網站)與 Railway(API)自動部署**;GitHub Actions 會先跑 lint / typecheck / build(見 `.github/workflows/ci.yml`)。
+- **資料庫已合併**:2026-10-08 起,本站(好日子 Good Days)的資料庫併入集團 Supabase 專案 `gooddays-group`(`noijrmhdfbfvjyvchvzj`),與小時光書店、快樂手共用;好日子的表在 `gooddays`(+ `gooddays_private`)schema,`public` 是小時光書店的
+- **為什麼停用**:腳本是合併前寫的,現在執行會新建空專案並改 Vercel 環境變數、重新部署正式站,就算指向合併後的專案也會把 migration 重跑進小時光書店的 `public`、改三站共用的 auth 設定與小時光書店的 `profiles`;詳見 `scripts/provision.mjs` 開頭
+- **改資料庫結構**:在專案 `noijrmhdfbfvjyvchvzj` 上手動對 `gooddays` schema 執行 SQL(web / api 的 Supabase client 都已指定 `gooddays`,見 `web/src/lib/supabase/schema.ts`);`supabase/migrations/` 是合併前寫給 `public` 的歷史檔,不要整批對合併後的專案重跑(含 `supabase db push`),否則會套進小時光書店的 `public`
+- **部署**:push 到 `main` → 自動部署 Vercel 專案 `goodday`(網站)與 Railway 專案 `interval` 的 `api` 服務;GitHub Actions 另外會跑 lint / typecheck / test / build(見 `.github/workflows/ci.yml`)
+- **合併與切換紀錄**:`alice-store/supabase/consolidation/95_cutover.md`(小時光書店 repo `LaiQuan-tech/interval-books`)
 
 ## 本地開發
 

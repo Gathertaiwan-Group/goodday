@@ -1,6 +1,31 @@
 #!/usr/bin/env node
+// ⛔ 2026-10-08 起停用：三站資料庫合併後，這支腳本會打壞正式站與小時光書店。
+// 下面這段 guard 讓它一執行就結束；guard 之後的原始程式碼只留作紀錄，不要拿掉 guard 來跑。
+console.error(`
+⛔ scripts/provision.mjs 已停用，什麼都沒做就結束了。
+
+2026-10-08 起，好日子的資料庫已併入集團 Supabase 專案 gooddays-group（noijrmhdfbfvjyvchvzj），
+跟小時光書店、快樂手共用同一個專案：好日子的表在 gooddays（＋gooddays_private）schema，public 是小時光書店的。
+這支腳本是合併前寫的，現在執行會：
+
+  1. 用 PROJECT_NAME（預設 "goodday"）找 Supabase 專案，找不到就建立一個新的空專案，
+     再把 Vercel 專案的環境變數改成指向它並觸發正式站重新部署（正式站會接到空的資料庫）；
+     Railway 也會照名稱找專案（找不到就新建）並改寫 api 服務的變數。
+  2. 就算指向合併後的專案，也會：
+     - 在 public 建自己的 _migrations 帳本（合併後的資料庫沒有這張表），再把 supabase/migrations
+       全部重跑進 public，等於把好日子的 migration 重放進小時光書店的 schema；
+     - PATCH 三站共用的 auth 設定：改掉 site_url、打開 mailer_autoconfirm（等於關掉信箱驗證）；
+     - 執行 update public.profiles set role = 'admin' where email = ADMIN_EMAIL，
+       改到的是小時光書店的 profiles 表。
+
+要改資料庫結構：在專案 noijrmhdfbfvjyvchvzj 上手動對 gooddays schema 執行 SQL
+（web／api 的 Supabase client 都已指定 gooddays schema，見 web/src/lib/supabase/schema.ts）。
+合併與切換的紀錄：alice-store/supabase/consolidation/95_cutover.md（小時光書店 repo LaiQuan-tech/interval-books）。
+`);
+process.exit(1);
+
 /**
- * 好日子 Good Days 一鍵佈建腳本
+ * 好日子 Good Days 一鍵佈建腳本（⛔ 已停用，見檔案開頭；以下是停用前的原始說明）
  *
  * 用你的平台 token 自動完成:
  *   1. Supabase:建立專案 → 跑 migrations → 關閉 email 確認 → 建立管理員帳號

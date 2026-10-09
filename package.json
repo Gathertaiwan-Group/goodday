@@ -10,7 +10,7 @@
     "lint": "npm run lint --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspace=web",
-    "provision": "node scripts/provision.mjs"
+    "provision": "echo '⛔ provision 已停用：2026-10-08 三站資料庫合併後，執行會打壞正式站與小時光書店。原因見 scripts/provision.mjs 開頭' >&2 && exit 1"
   },
   "workspaces": [
     "web",
